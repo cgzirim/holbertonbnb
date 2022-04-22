@@ -160,5 +160,6 @@ Jhoan Zamora - [Github](https://github.com/jzamora5) / [Twitter](https://twitter
 David Ovalle - [Github](https://github.com/Nukemenonai) / [Twitter](https://twitter.com/disartDave)  
 Joann Vuong  
 Chigozirim Igweamaka - [Github](https://github.com/iChigozirim) / [Twitter](https://twitter.com/iChigozirim_)
+Coker Oluwaseguns - [Github](https://github.com/Cokeroluwasegun) / [Linkedin](https://linkedin.com/in/oluwasegun-coker-2aa6b383)
 ## License
 Public Domain. No copy write protection. 
