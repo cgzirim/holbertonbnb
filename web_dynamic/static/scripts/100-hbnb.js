@@ -6,22 +6,56 @@ $('document').ready(() => {
       $('DIV#api_status').removeClass('available');
     }
   });
+  $.ajax({
+    url: 'http://localhost:5001/api/v1/places_search',
+    type: 'POST',
+    data: '{}',
+    contentType: 'application/json',
+    dataType: 'json',
+    success: placeWithAmenity
+  });
 
+    const amenities = {};
+  const states = {};
+  const cities = {};
 
-$(function () {
-        let amenities = {};
-	$('input[type="checked"]').change(function () {
-		if ($(this).is(':checked')) {
-			amenities[$(this).attr('data-id')] = $(this).attr('data-name');
-		} else {
-			delete amenities[$(this).attr('data-id')];
-		}
-                                                                                 		$('.amenities H4').text(Object.values(amenities).join(', '));
-	});
-});
+  $('div.amenities li input').change(function () {
+    if ($(this).is(':checked')) {
+      amenities[($(this).attr('data-id'))] = $(this).attr('data-name');
+    } else {
+      delete amenities[($(this).attr('data-id'))];
+    }
+    $('div.amenities h4').text(Object.values(amenities).join(', '));
+  });
+
+  $('div.locations h2 > input').change(
+        function () {
+          if ($(this).is(':checked')) {
+            states[($(this).attr('data-id'))] = $(this).attr('data-name');
+          } else {
+            delete states[($(this).attr('data-id'))];
+          }
+          const both = Object.values(states).concat(Object.values(cities));
+          $('div.locations h4').html(both.join(', ') || '&nbsp;');
+        });
+
+  $('div.locations li > input').change(
+    function () {
+      if ($(this).is(':checked')) {
+        cities[($(this).attr('data-id'))] = $(this).attr('data-name');
+      } else {
+        delete cities[($(this).attr('data-id'))];
+      }
+      const both = Object.values(states).concat(Object.values(cities));
+      $('div.locations h4').html(both.join(', ') || '&nbsp;');
+    });
 
   $('button').click(() => {
-    const data = { amenities: Object.keys(amenities) };
+    const data = { 
+      amenities: Object.keys(amenities),
+      states: Object.keys(states),
+      cities: Object.keys(cities)
+    };
     $.ajax({
       url: 'http://localhost:5001/api/v1/places_search',
       type: 'POST',
@@ -31,36 +65,38 @@ $(function () {
       success: placeWithAmenity
     });
   });
-    
-$(function) () {
-	$.ajax({
-		type: 'POST',
-		url: 'http://0.0.0.0:5001/api/v1/places_search/',
-		Content-Type: application/json'
-		data: '{}',
-		dataType: 'json',
-		success: function (data) {
-			$('section.places').append(data.map(place => {
-				return `<article>
-	  				  <div class="title_box">
-	    				  	<h2>{{ place.name }}</h2>
-	    					<div class="price_by_night">${{ place.price_by_night }}</div>
-	  				  </div>
-	  				  <div class="information">
-	    					<div class="max_guest">{{ place.max_guest }} Guest{% if place.max_guest != 1 %}s{% endif %}</div>
-            					<div class="number_rooms">{{ place.number_rooms }} Bedroom{% if place.number_rooms != 1 %}s{% endif %}</div>
-            					<div class="number_bathrooms">{{ place.number_bathrooms }} Bathroom{% if place.number_bathrooms != 1 %}s{% endif %}</div>
-	  				  </div>
-	  				  <div class="user">
-            					<b>Owner:</b> {{ place.user.first_name }} {{ place.user.last_name }}
-          				  </div>
-          				  <div class="description">
-	    					{{ place.description | safe }}
-          				  </div>
-					</article>`;
-			});
-		}
 
-	});
+
+  function placeWithAmenity (listPlaces) {
+    $('.placeontainer').empty();
+    for (const place of listPlaces) {
+      $('.placeontainer').append(
+        `<article>
+          <div class="title_place">
+            <h2>${place.name}</h2>
+            <div class="price_by_night">
+            ${place.price_by_night}
+            </div>
+          </div>
+          <div class="details">
+            <div class="max_guest">
+              <div class="logo"></div>
+              <span>${place.max_guest} Guests</span>
+            </div>
+            <div class="number_rooms">
+              <div class="logo"></div>
+              <span>${place.number_rooms} Bedroom</span>
+            </div>
+            <div class="number_bathrooms">
+              <div class="logo"></div>
+              <span>${place.number_bathrooms} Bathroom</span>
+            </div>
+          </div>
+          <div class="description">
+            ${place.description}
+          </div>
+        </article>`
+      );
+    }
+  }
 });
-
