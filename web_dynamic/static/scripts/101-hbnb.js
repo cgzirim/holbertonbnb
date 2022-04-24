@@ -1,5 +1,19 @@
-success: placeWithAmenity
-});
+$('document').ready(() => {
+  $.get('http://localhost:5001/api/v1/status/', (data) => {
+    if (data.status === 'OK') {
+      $('DIV#api_status').addClass('available');
+    } else {
+      $('DIV#api_status').removeClass('available');
+    }
+  });
+$.ajax({
+    url: 'http://localhost:5001/api/v1/places_search',
+    type: 'POST',
+    data: '{}',
+    contentType: 'application/json',
+    dataType: 'json',
+    success: placeWithAmenity
+  });
 
 const amenities = {};
 const states = {};
