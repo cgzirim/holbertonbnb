@@ -159,7 +159,7 @@ Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://tw
 Jhoan Zamora - [Github](https://github.com/jzamora5) / [Twitter](https://twitter.com/JhoanZamora10)  
 David Ovalle - [Github](https://github.com/Nukemenonai) / [Twitter](https://twitter.com/disartDave)  
 Joann Vuong  
-Chigozirim Igweamaka - [Github](https://github.com/iChigozirim) / [Twitter](https://twitter.com/iChigozirim_)
 Coker Oluwaseguns - [Github](https://github.com/Cokeroluwasegun) / [Linkedin](https://linkedin.com/in/oluwasegun-coker-2aa6b383)
+Chigozirim Igweamaka - [Github](https://github.com/iChigozirim) / [Twitter](https://twitter.com/iChigozirim_)
 ## License
 Public Domain. No copy write protection. 
