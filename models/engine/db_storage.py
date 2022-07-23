@@ -12,12 +12,12 @@ from models.review import Review
 from models.state import State
 from models.user import User
 from os import getenv
-import sqlalchemy
+from sqlalchemy import exc
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 classes = {"Amenity": Amenity, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
+           "Place": Place, "State": State, "User": User}
 
 
 class DBStorage:
@@ -57,12 +57,24 @@ class DBStorage:
 
     def save(self):
         """commit all changes of the current database session"""
-        self.__session.commit()
+        #self.__session.commit()
+        try:
+            self.__session.commit()
+        except exc.SQLAlchemyError as e:
+            print("Operation failed:")
+            print(e.args[0])
+            self.__session.rollback()
 
     def delete(self, obj=None):
         """delete from the current database session obj if not None"""
         if obj is not None:
+            if type(obj) == str:
+                obj = eval(obj)
             self.__session.delete(obj)
+            try:
+                self.__session.commit()
+            except exc.InvalidRequestError:
+                self.__session.rollback()
 
     def reload(self):
         """reloads data from the database"""
