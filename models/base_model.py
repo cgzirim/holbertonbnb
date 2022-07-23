@@ -7,6 +7,7 @@ from datetime import datetime
 import models
 from os import getenv
 import sqlalchemy
+from sqlalchemy import exc
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
@@ -22,7 +23,7 @@ else:
 class BaseModel:
     """The BaseModel class from which future classes will be derived"""
     if models.storage_t == "db":
-        id = Column(String(60), primary_key=True)
+        id = Column(String(60), primary_key=True, nullable=False)
         created_at = Column(DateTime, default=datetime.utcnow)
         updated_at = Column(DateTime, default=datetime.utcnow)
 
@@ -57,6 +58,7 @@ class BaseModel:
         self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
+            
 
     def to_dict(self, save_fs=None):
         """returns a dictionary containing all keys/values of the instance"""
