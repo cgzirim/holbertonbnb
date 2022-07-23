@@ -9,7 +9,21 @@ from sqlalchemy.orm import relationship
 
 
 class City(BaseModel, Base):
-    """Representation of city """
+    """This class is a representation of a city.
+    
+    Attributes:
+        name: The name of the City
+            - Optional: False
+            - Type: String
+            - Length: <= 128
+
+        state_id: ID of the state where City is located
+            - Optional: False
+            - Type: String
+            - Length: <= 60
+
+        Note: All attributes are optional when file storage is utilized.
+    """
     if models.storage_t == "db":
         __tablename__ = 'cities'
         state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
@@ -17,6 +31,7 @@ class City(BaseModel, Base):
         places = relationship("Place",
                               backref="cities",
                               cascade="all, delete, delete-orphan")
+
     else:
         state_id = ""
         name = ""

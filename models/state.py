@@ -10,13 +10,24 @@ from sqlalchemy.orm import relationship
 
 
 class State(BaseModel, Base):
-    """Representation of state """
+    """This class is a representation of a state.
+    
+    Attributes:
+        name: The name of the State
+            - name: The name of the State
+            - Optional: False
+            - Type: String
+            - Length: 128
+
+        Note: All attributes are optional when file storage is utilized.
+    """
     if models.storage_t == "db":
         __tablename__ = 'states'
         name = Column(String(128), nullable=False)
         cities = relationship("City",
                               backref="state",
                               cascade="all, delete, delete-orphan")
+
     else:
         name = ""
 

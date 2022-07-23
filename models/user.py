@@ -11,7 +11,28 @@ from hashlib import md5
 
 
 class User(BaseModel, Base):
-    """Representation of a user """
+    """This class is a representation of a user.
+    
+    Attributes:
+        first_name:
+            - Optional: False
+            - Type: String
+            - Length: 128
+        last_name:
+            - Optional: False
+            - Type: String
+            - Length: 128
+        email:
+            - Optional: False
+            - Type: String
+            - Length: 128
+        password:
+            - Optional: False
+            - Type: String
+            - Length: 128
+
+        Note: All attributes are optional when file storage is utilized.
+    """
     if models.storage_t == 'db':
         __tablename__ = 'users'
         email = Column(String(128), nullable=False)

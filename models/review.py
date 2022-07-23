@@ -8,7 +8,24 @@ from sqlalchemy import Column, String, ForeignKey
 
 
 class Review(BaseModel, Base):
-    """Representation of Review """
+    """This class is a representation of a review.
+    
+    Attributes:
+        place_id: The ID of the place the review is made for
+            - Optional: False
+            - Type: String
+            - Length: 60
+        user_id: The ID of the user making the review
+            - Optional: False
+            - Type: String
+            - Length: 60
+        text: The review given to the place by a user
+            - Optional: False
+            - Type: String
+            - Length: 1024
+
+        Note: All attributes are optional when file storage is utilized.
+    """
     if models.storage_t == 'db':
         __tablename__ = 'reviews'
         place_id = Column(String(60), ForeignKey('places.id'), nullable=False)

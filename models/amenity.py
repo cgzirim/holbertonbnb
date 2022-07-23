@@ -9,10 +9,20 @@ from sqlalchemy.orm import relationship
 
 
 class Amenity(BaseModel, Base):
-    """Representation of Amenity """
+    """This class is a representation of an amenity.
+    
+    Attributes:
+        name: The amenity's name.
+            - Optional: False
+            - Type: String
+            - Length: <= 128
+
+        Note: All attributes are optional when file storage is utilized.
+    """
     if models.storage_t == 'db':
         __tablename__ = 'amenities'
         name = Column(String(128), nullable=False)
+
     else:
         name = ""
 
