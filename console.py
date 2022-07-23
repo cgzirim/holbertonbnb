@@ -4,6 +4,7 @@
 import cmd
 from datetime import datetime
 import models
+from os import getenv
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
@@ -22,6 +23,9 @@ classes = {
     "State": State,
     "User": User,
 }
+
+if getenv("HBNB_TYPE_STORAGE") == "db":
+    del classes["BaseModel"]
 
 
 class HBNBCommand(cmd.Cmd):
@@ -99,6 +103,48 @@ class HBNBCommand(cmd.Cmd):
         print(instance.id)
         instance.save()
 
+    def do_classes(self, arg):
+        """Lists all available classes with "classes" or detailed class
+        with "classes class_name".
+        """
+        args = arg.split()
+        if len(args) == 0:
+            print("Available classes are:")
+            for name, obj in classes.items():
+                print("\t{}".format(name))
+            print("""Use the command 'classes <class_name>' to learn how
+                to create any of the classes above.""")
+            return
+
+        if args[0] not in classes:
+            print("** class doesn't exist **")
+            return False
+
+        all_classes = {
+            "Amenity": 'create Amenity name="Hot tube"',
+            "City": 'create City state_id="95a5abab-aa65-4861-9bc6-1da4a36069aa" name="San_Francisco"',
+            "Place": 'create Place city_id="4b457e66-c7c8-4f63-910f-fd91c3b7140b" user_id="4f3f4b42-a4c3-4c20-a492-efff10d00c0b" name="Lovely_place" number_rooms=3 number_bathrooms=1 max_guest=6 price_by_night=120 latitude=37.773972 longitude=-122.431297',
+            "Review": 'create Review place_id="ed72aa02-3286-4891-acbc-9d9fc80a1103" user_id="d93638d9-8233-4124-8f4e-17786592908b" text="Amazing_place,_huge_kitchen"',
+            "State": 'create State name="California"',
+            "User": 'create User email="gui@hbtn.io" password="guipwd" first_name="Guillaume" last_name="Snow"',
+        }
+
+        usage = {
+            "Amenity": "create Amenity <amenity_name>",
+            "City": "create City <state_id> <city_name>",
+            "Review": "create Review <place_id> <user_id> <text>",
+            "State": "create State <name>",
+            "User": "create User <email> <password> <first_name> <last_name>",
+            "Place": "create Place <city_id> <user_id> <place_name> <number_rooms> <number_bathrooms> <max_guest> <price_by_night> <longitude> <latitude>"
+        }
+
+        print("Usage: {}\n".format(usage[args[0]]) )
+        print("\nExample of use:")
+        print("{}\n".format(all_classes[args[0]]))
+        print("Class documentation:")
+        print(classes[args[0]].__doc__)
+
+
     def do_show(self, arg):
         """Prints the string representation of an instance based on the class
         name and id.
@@ -133,8 +179,12 @@ class HBNBCommand(cmd.Cmd):
             if len(args) > 1:
                 key = args[0] + "." + args[1]
                 if key in models.storage.all():
-                    models.storage.all().pop(key)
-                    models.storage.save()
+                    if getenv("HBNB_TYPE_STORAGE") == "db":
+                        instance = models.storage.all()[key]
+                        instance.delete()
+                    else:
+                        models.storage.all().pop(key)
+                        models.storage.save()
                 else:
                     print("** no instance found **")
             else:
@@ -167,11 +217,18 @@ class HBNBCommand(cmd.Cmd):
         print("]")
 
     def do_count(self, arg):
-        """Retrieves the number of instances of a class.
+        """Displays the number of instances of a class.
 
         Usage: count <class_name> or <class_name>.count()
         """
         args = shlex.split(arg)
+        if len(args) == 0:
+            print("** class name missing **")
+            return False
+        if args[0] not in classes:
+            print("** class doesn't exist **")
+            return False
+        
         count = 0
         for key in models.storage.all().keys():
             if args[0] in key:
