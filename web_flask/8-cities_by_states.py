@@ -5,8 +5,6 @@ from models.state import State
 from os import environ
 from flask import Flask, render_template
 app = Flask(__name__)
-# app.jinja_env.trim_blocks = True
-# app.jinja_env.lstrip_blocks = True
 
 
 @app.teardown_appcontext

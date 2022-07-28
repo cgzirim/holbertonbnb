@@ -1,1 +1,1 @@
-** Web Static AirBnB
+This directory implements webpage design.
