@@ -51,23 +51,19 @@ article {
 }
 
 .information {
-	display: block;
+	display: flex;
 	height: 80px;
 	width: 100%;
-	border-top: 1px solid #DDDDDD;
-	border-bottom: 1px solid #DDDDDD;
+	border-top: 1px solid #DDD;
+	border-bottom: 1px solid #DDD;
 
-	padding-top: 5px;
-	padding-bottom: 12px;
+	align-items: center;
 	margin-top: 10px;
 	margin-bottom: 20px;
 }
 
 .max_guest, .number_rooms, .number_bathrooms {
-	display: inline-block;
-	width: 100px;
-	text-align: center;
-	margin: 0px auto;
+	width: 100%;
 }
 
 .user {
@@ -101,13 +97,23 @@ h1 {
 	
 }
 
+details {
+	font-size: 16px;
+	text-align: left;
+	width: 100%;
+	padding: 0px;
+	margin-top: 20px;
+	padding-bottom: 10px;
+}
+
 article .amenities {
+	border-top: 1px solid #DDDDDD;
+	margin-top: 12px;
 	display: block;
 	width: 100%;
-	height: 80px;
+	height: 120px;
 	text-align: left;
 	overflow: scroll;
-	
 }
 
 .article_title {
@@ -204,4 +210,8 @@ article h2 {
 	background-position: center;
     width: 50px;
     height: 50px;
+}
+
+span {
+	cursor:pointer
 }

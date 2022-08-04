@@ -102,27 +102,31 @@ $(function () {
 					</div>
 					<div class="information">
 						<div class="max_guest">
-							<div class="guest_icon"></div>
-							<p>${place.max_guest} Guest${s}</p>
+              <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+              </br>
+							${place.max_guest} Guest${s}
 						</div>
 						<div class="number_rooms">
-							<div class="bed_icon"></div>
-							<p>${place.number_rooms} Bedroom${s}</p>
+              <i class="fa fa-bed fa-3x" aria-hidden="true"></i>
+              </br>
+							${place.number_rooms} Bedroom${s}
 						</div>
 						<div class="number_bathrooms">
-            <i class="fa fa-bath fa-3x" aria-hidden="true"></i>
-							<div class="bath_icon"></div>
-							<p>${place.number_bathrooms} Bathroom${s}</p>
+              <i class="fa fa-bath fa-3x" aria-hidden="true"></i>
+              </br>
+							${place.number_bathrooms} Bathroom${s}
 						</div>
 					</div>
 					<div class="user"><b>Owner</b>: ${user.first_name} ${user.last_name}</div>
 					<div class="description">
 						${place.description}
 					</div>
-					<h2 class="article_subtitle">Amenities</h2>
-					<div class="amenities" id="${place.id}">
-						<p>${place.description}</p>
-					</div>
+          <details>
+            <summary> <strong>Amenities</strong> </summary>
+            <div class="amenities" id="${place.id}">
+              <p>${place.description}</p>
+            </div>
+          </details>
 					<h2 class="article_subtitle">Reviews</h2>
           <span class="show_hide">(show)</span>
           <div id="update_show_hide">
