@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-""" console """
+""" Module for the console """
 
 import cmd
-from datetime import datetime
 import models
 from os import getenv
 from models.amenity import Amenity
@@ -33,6 +32,20 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
+    def preloop(self):
+        """Handles intro to command interpreter."""
+        print(".----------------------------.")
+        print("|    Welcome to hbnb CLI!    |")
+        print("|   for help, input 'help'   |")
+        print("|   for quit, input 'quit'   |")
+        print(".----------------------------.")
+
+    def postloop(self):
+        """Handles exit to command interpreter."""
+        print(".----------------------------.")
+        print("|  Well, that sure was fun!  |")
+        print(".----------------------------.")
+
     def do_EOF(self, arg):
         """Exits console"""
         return True
@@ -56,8 +69,8 @@ class HBNBCommand(cmd.Cmd):
         }
         if "." in arg and "(" in arg and ")" in arg:
             cls = arg[: arg.index(".")]
-            method = arg[arg.index(".") + 1: arg.index("(")]
-            argument = arg[arg.index("(") + 1: arg.index(")")]
+            method = arg[arg.index(".") + 1 : arg.index("(")]
+            argument = arg[arg.index("(") + 1 : arg.index(")")]
             argument = "{} {}".format(cls, argument.replace(",", ""))
             if method in cmds.keys():
                 return cmds[method](argument)
@@ -87,8 +100,10 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Creates a new instance of a class.
-
-        Usage: create <class> or <class>.create()
+        Usage: create <class> <param 1> <param 2> ..., or
+               <class>.create(<param 1> <param 2> ...)
+        Ex: (hbnb) create City name="Tokyo"
+            (hbnb) City.create(name="Tokyo")
         """
         args = arg.split()
         if len(args) == 0:
@@ -103,53 +118,13 @@ class HBNBCommand(cmd.Cmd):
         print(instance.id)
         instance.save()
 
-    def do_classes(self, arg):
-        """Lists all available classes with "classes" or detailed class
-        with "classes class_name".
-        """
-        args = arg.split()
-        if len(args) == 0:
-            print("Available classes are:")
-            for name, obj in classes.items():
-                print("\t{}".format(name))
-            print("""Use the command 'classes <class_name>' to learn how
-                to create any of the classes above.""")
-            return
-
-        if args[0] not in classes:
-            print("** class doesn't exist **")
-            return False
-
-        all_classes = {
-            "Amenity": 'create Amenity name="Hot tube"',
-            "City": 'create City state_id="95a5abab-aa65-4861-9bc6-1da4a36069aa" name="San_Francisco"',
-            "Place": 'create Place city_id="4b457e66-c7c8-4f63-910f-fd91c3b7140b" user_id="4f3f4b42-a4c3-4c20-a492-efff10d00c0b" name="Lovely_place" number_rooms=3 number_bathrooms=1 max_guest=6 price_by_night=120 latitude=37.773972 longitude=-122.431297',
-            "Review": 'create Review place_id="ed72aa02-3286-4891-acbc-9d9fc80a1103" user_id="d93638d9-8233-4124-8f4e-17786592908b" text="Amazing_place,_huge_kitchen"',
-            "State": 'create State name="California"',
-            "User": 'create User email="gui@hbtn.io" password="guipwd" first_name="Guillaume" last_name="Snow"',
-        }
-
-        usage = {
-            "Amenity": "create Amenity <amenity_name>",
-            "City": "create City <state_id> <city_name>",
-            "Review": "create Review <place_id> <user_id> <text>",
-            "State": "create State <name>",
-            "User": "create User <email> <password> <first_name> <last_name>",
-            "Place": "create Place <city_id> <user_id> <place_name> <number_rooms> <number_bathrooms> <max_guest> <price_by_night> <longitude> <latitude>"
-        }
-
-        print("Usage: {}\n".format(usage[args[0]]) )
-        print("\nExample of use:")
-        print("{}\n".format(all_classes[args[0]]))
-        print("Class documentation:")
-        print(classes[args[0]].__doc__)
-
-
     def do_show(self, arg):
-        """Prints the string representation of an instance based on the class
-        name and id.
+        """Prints the string representation of an instance based on its class
+        and ID.
 
-        Usage: show <class> <id> or <class>.show()
+        Usage: show <class> <id> or <class>.show(<id>)
+        Ex: (hbnb) show City 1234-abcd-5678-efgh
+            (hbnb) City.show(1234-abcd-5678-efgh)
         """
         args = shlex.split(arg)
         if len(args) == 0:
@@ -168,9 +143,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id.
-
+        """Deletes an instance based on its class and ID.
         Usage: destroy <class> <id> or <class>.destroy(<id>)
+        Ex: (hbnb) destroy City 1234-abcd-5678-efgh
+            (hbnb) City.destroy(1234-abcd-5678-efgh)
         """
         args = shlex.split(arg)
         if len(args) == 0:
@@ -193,8 +169,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances based or not on
-        the class name.
+        """Prints string representation of all instances based on, or not on,
+        a class.
 
         Usage: all or all <class> or <class>.all()
         Ex: (hbnb) all
@@ -217,9 +193,10 @@ class HBNBCommand(cmd.Cmd):
         print("]")
 
     def do_count(self, arg):
-        """Displays the number of instances of a class.
-
-        Usage: count <class_name> or <class_name>.count()
+        """Prints the number of instances of a class.
+        Usage: count <class> or <class>.count()
+        Ex: (hbnb) count City
+            (hbnb) City.count()
         """
         args = shlex.split(arg)
         if len(args) == 0:
@@ -228,7 +205,7 @@ class HBNBCommand(cmd.Cmd):
         if args[0] not in classes:
             print("** class doesn't exist **")
             return False
-        
+
         count = 0
         for key in models.storage.all().keys():
             if args[0] in key:
@@ -239,16 +216,14 @@ class HBNBCommand(cmd.Cmd):
         """Updates an instance based on the class name and id by adding
         or updating an attribute.
 
-        Usage: update <class name> <id> <attribute name> "<attribute value>" or
+        Usage: update <class name> <id> <attribute name> <attribute value> or
                 <class name>.update(<id>, <attribute name>, <attribute value>)
+        Ex: (hbnb) update City 1234-abcd-5678-efgh name Chicago
+            (hbnb) City.update(1234-abcd-5678-efgh, name, Chicago)
+            (hbnb) City.update(1234-abcd, {'name': 'Chicago', 'address': 'None'})
         """
         args = shlex.split(arg)
-        integers = [
-            "number_rooms",
-            "number_bathrooms",
-            "max_guest",
-            "price_by_night"
-        ]
+        integers = ["number_rooms", "number_bathrooms", "max_guest", "price_by_night"]
         floats = ["latitude", "longitude"]
         if len(args) == 0:
             print("** class name missing **")
@@ -281,6 +256,185 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance id missing **")
         else:
             print("** class doesn't exist **")
+
+    # Define methods to display help for each class:
+
+    def help_BaseModel(self):
+        """Help for the BaseModel class."""
+        message = """A class from which other classes inherit from.
+            Usage: <command> BaseModel or BaseModel.<command>()
+        """
+        print(message)
+
+    def help_Amenity(self):
+        """Help for Amenity class."""
+        message = """A class which represents an amenity.
+        Usage: <command> Amenity or Amenity.<command>()
+
+        Required attributes (columns) to create an Amenity:
+            attr_name |  data-type |  mandatory
+            -----------------------------------
+            name      |  string    |  yes
+            
+        Ex: (hbnb) create Amenity name="Wifi" or
+            (hbnb) Amenity.create(name="Wifi")
+        """
+
+        print(message)
+
+    def help_City(self):
+        """Help for City class."""
+        message = """A class which represents a city.
+        Usage: <command> City or City.<command>()
+
+        Required attributes (columns) to create a City:
+            attr_name |  data-type |  mandatory
+            -----------------------------------
+            name      |  string    |  yes
+            state_id  |  string    |  yes
+        
+        Ex: (hbnb) create City name="Tokyo" state_id="1234-abcd-efgh-54678" or
+            (hbnb) City.create(name="Tokyo" state_id="1234-abcd-efgh-54678")
+        """
+
+        print(message)
+
+    def help_Place(self):
+        """Help for Place class."""
+        message = """A class which represents a place.
+        Usage: <command> Place or Place.<command>()
+        
+        Required attributes (columns) to create a Place:
+            attr_name       |  data-type |  mandatory
+            -----------------------------------------
+            name            |  string    |  yes
+            city_id         |  string    |  yes
+            state_id        |  string    |  yes
+            number_rooms    |  integer   |  yes
+            number_bathrooms|  integer   |  yes
+            max_guest       |  integer   |  yes
+            price_by_night  |  integer   |  yes
+            description     |  string    |  no
+            latitude        |  float     |  no
+            longitude       |  float     |  no
+            amenity_ids     |  list      |  no
+
+        Ex: (hbnb) create Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms=2 max_guest=10 price_by_night=300 latitude=37.773972 longitude=-122.431297
+        or  (hbnb) Place.create(create Place city_id="0001" user_id="0001" name="My_little_house" number_rooms=4 number_bathrooms=2 max_guest=10 price_by_night=300 latitude=37.773972 longitude=-122.431297)
+        """
+        print(message)
+
+    def help_Review(self):
+        """Help for Review class."""
+        message = """A class which represents a review.
+        Usage: <command> Review or Review.<command>()
+        
+        Required attributes (columns) to create a Review:
+            attr_name |  data-type |  mandatory
+            -----------------------------------
+            place_id  |  string    |  yes
+            user_id   |  string    |  yes
+            text      |  string    |  yes
+
+        Ex: (hbnb) create Review place_id="123-abc-456-def" user_id="123-abc-456-def" text="Amazing_place,_huge_kitchen"
+        or  (hbnb) Review.create(place_id="123-abc-456-def" user_id="123-abc-456-def" text="Amazing_place,_huge_kitchen")
+        """
+        print(message)
+
+    def help_State(self):
+        """Help for State class."""
+        message = """A class which represents a state.
+        Usage: <command> State or State.<command>()
+        
+        Required attributes (columns) to create a State:
+            attr_name |  data-type |  mandatory
+            -----------------------------------
+            name      |  string    |  yes
+
+        Ex: (hbnb) Create State name="California" or
+            (hbnb) State.create(name="California")
+        """
+        print(message)
+
+    def help_User(self):
+        """Help for User class."""
+        message = """A class which represents a user.
+        Usage: <command> User or User.<command>()
+
+        Required attributes (columns) to create a User:
+            attr_name  |  data-type |  mandatory
+            ------------------------------------
+            first_name |  string    |  yes
+            last_name  |  string    |  yes
+            email      |  string    |  yes
+            password   |  string    |  yes
+
+        Ex: (hbnb) create User email="gui@example.com" password="guipwd" first_name="Guillaume" last_name="Snow"
+        or  (hbnb) User.create(email="gui@example.com" password="guipwd" first_name="Guillaume" last_name="Snow")
+        """
+        print(message)
+
+    # Implement autocomplete for commands:
+
+    def complete_all(self, text, line, begidx, endidx):
+        """Auto complete for create command"""
+        if not text:
+            completions = [cls for cls in classes.keys()]
+        else:
+            text = text.capitalize()
+            completions = [cls for cls in classes.keys() if cls.startswith(text)]
+
+        return completions
+
+    def complete_count(self, text, line, begidx, endidx):
+        """Auto complete for create command"""
+        if not text:
+            completions = [cls for cls in classes.keys()]
+        else:
+            text = text.capitalize()
+            completions = [cls for cls in classes.keys() if cls.startswith(text)]
+
+        return completions
+
+    def complete_create(self, text, line, begidx, endidx):
+        """Auto complete for create command"""
+        if not text:
+            completions = [cls for cls in classes.keys()]
+        else:
+            text = text.capitalize()
+            completions = [cls for cls in classes.keys() if cls.startswith(text)]
+
+        return completions
+
+    def complete_destroy(self, text, line, begidx, endidx):
+        """Auto complete for create command"""
+        if not text:
+            completions = [cls for cls in classes.keys()]
+        else:
+            text = text.capitalize()
+            completions = [cls for cls in classes.keys() if cls.startswith(text)]
+
+        return completions
+
+    def complete_show(self, text, line, begidx, endidx):
+        """Auto complete for create command"""
+        if not text:
+            completions = [cls for cls in classes.keys()]
+        else:
+            text = text.capitalize()
+            completions = [cls for cls in classes.keys() if cls.startswith(text)]
+
+        return completions
+
+    def complete_update(self, text, line, begidx, endidx):
+        """Auto complete for create command"""
+        if not text:
+            completions = [cls for cls in classes.keys()]
+        else:
+            text = text.capitalize()
+            completions = [cls for cls in classes.keys() if cls.startswith(text)]
+
+        return completions
 
 
 if __name__ == "__main__":
