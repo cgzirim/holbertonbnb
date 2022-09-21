@@ -206,7 +206,7 @@ def pack_and_upload(folder):
 
 
 def setup_webserver():
-    """Configures Nginx and installs the necessary modules on an Ubuntu
+    """Configures Nginx and installs the necessary dependencies on an Ubuntu
     machine to serve Holbertonbnb.
     """
     run("sudo apt-get update")
