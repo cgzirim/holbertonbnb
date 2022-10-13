@@ -10,15 +10,29 @@
 		<link rel="stylesheet" href="../static/styles/footer.css?{{ cache_id }}"/>
 		<link rel="stylesheet" href="../static/styles/filters.css?{{ cache_id }}"/>
 		<link rel="stylesheet" href="../static/styles/places.css?{{ cache_id }}"/>
+		<link rel="stylesheet" href="../static/styles/web_terminal.css?{{ cache_id }}"/>
 		<script src="https://kit.fontawesome.com/051d5c98a7.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   		<script src="../static/scripts/dynamic.js? {{ cache_id }}"></script>
+		 
+		<!-- xterm -->
+		 <link rel="stylesheet" href="https://unpkg.com/xterm@4.11.0/css/xterm.css"/>
+		 <script src="https://unpkg.com/xterm@4.11.0/lib/xterm.js"></script>
+		 <script src="https://unpkg.com/xterm-addon-fit@0.5.0/lib/xterm-addon-fit.js"></script>
+		 <script src="https://unpkg.com/xterm-addon-web-links@0.4.0/lib/xterm-addon-web-links.js"></script>
+		 <script src="https://unpkg.com/xterm-addon-search@0.8.0/lib/xterm-addon-search.js"></script>
+		 
+		 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
 	</head>
     <body>
 		<header>
 			<div id="header_logo"></div>
+			<div id="terminal_btn" class="popup-link">
+				<a href="#console"><p>>_</p></a>
+			</div>
 			<div id="api_status"></div>
 		</header>
+		
 		<div class="container">
 			<section class="filters">
 				<button>Search</button>
@@ -56,8 +70,21 @@
 						{% endfor %}
 					</ul>
 				</div>
-
 			</section>
+
+			<!--web-terminal popup-->
+			<div id="console" class="terminal-container">
+				<div class="terminal-content">
+					<a href="#" class="close">&times;</a>
+
+					<span style="font-size: 1.4em">hbnb console</span>&nbsp;&nbsp;&nbsp;
+					<span style="font-size: small">status:</span>
+					<span style="font-size: small" id="status">connecting...</span>
+					<div id="terminal"></div>
+					<script src="../static/scripts/web_terminal.js"></script>
+				</div>
+			</div>
+
 			<section class="places">
 				<h1>Places</h1>
 			</section>

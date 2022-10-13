@@ -1,6 +1,7 @@
 $(function () {
   // Dynamically filter amenities
   const amenities = {};
+
   $('.amenities input').change(function () {
 	  if ($(this).is(':checked')) {
       amenities[$(this).attr('data-id')] = $(this).attr('data-name');
@@ -47,7 +48,7 @@ $(function () {
   });
 
   // Dynamically change API status
-  $.get('http://localhost:5001/api/v1/status/', (data) => {
+  $.get('https://miniairbnb.gq/api/v1/status/', (data) => {
 	  if (data.status === 'OK') {
       $('DIV#api_status').addClass('available');
 	  } else {
@@ -58,7 +59,7 @@ $(function () {
   // Fetch places dynamically
   $.ajax({
     type: 'POST',
-    url: 'http://0.0.0.0:5001/api/v1/places_search/',
+    url: 'https://miniairbnb.gq/api/v1/places_search/',
     contentType: 'application/json',
     data: '{}',
     dataType: 'json',
@@ -72,7 +73,7 @@ $(function () {
       states: Object.keys(states),
       cities: Object.keys(cities)};
     $.ajax({
-      url: 'http://localhost:5001/api/v1/places_search',
+      url: 'https://miniairbnb.gq/api/v1/places_search',
       type: 'POST',
       data: JSON.stringify(data),
       contentType: 'application/json',
@@ -85,7 +86,7 @@ $(function () {
   function uploadPlaces (data) {
     $('section.places').empty();
     $('section.places').append('<h1>Places</h1>');
-    $.get('http://0.0.0.0:5001/api/v1/users', function (response) {
+    $.get('https://miniairbnb.gq/api/v1/users', function (response) {
       const users = response;
       for (const place of data) {
         const user = users.find(user => user.id === place.user_id);
@@ -151,7 +152,7 @@ $(function () {
         );
         // Appends Amenities for a place
         let amenityDom = $(`section.places #${place.id}.amenities p`)
-        $.get(`http://localhost:5001/api/v1/places/${place.id}/amenities`, function (response) {
+        $.get(`https://miniairbnb.gq/api/v1/places/${place.id}/amenities`, function (response) {
             let placeAmenities = [];
             for (const amenity of response) {
               placeAmenities.push(amenity.name);
@@ -167,7 +168,7 @@ $(function () {
 
         let reviewDom = $(`section.places #${place.id}.reviews`)
 
-        $.get(`http://localhost:5001/api/v1/places/${place.id}/reviews`, function (response) {
+        $.get(`https://miniairbnb.gq/api/v1/places/${place.id}/reviews`, function (response) {
           // Create a ul tag
           let ulTag = $('<ul>', {class: 'toggle_reviews'});
           for (const review of response) {

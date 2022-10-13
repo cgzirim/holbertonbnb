@@ -1,0 +1,106 @@
+#!/usr/bin/python3
+"""Handles interactions with HBNB console remote connections."""
+import os
+import pty
+import fcntl
+import struct
+import select
+import termios
+import subprocess
+from signal import SIGKILL
+from flask import Flask, request
+from flask_socketio import SocketIO
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = "secret!"
+socketio = SocketIO(
+    app,
+    ping_timeout=60,
+    ping_interval=5,
+    cors_allowed_origins="*"
+)
+
+clients = {}
+
+def set_winsize(fd, row, col, xpix=0, ypix=0):
+    """Sets window size with termios."""
+    winsize = struct.pack('HHHH', row, col, xpix, ypix)
+    fcntl.ioctl(fd, termios.TIOCSWINSZ, winsize)
+
+def read_and_forward_console_output(fd, client_id, child_pid):
+    """Reads the output from the console program in the child process and
+    forward it to the remote console.
+    """
+    max_read_bytes = 1024 * 20
+    while True:
+        socketio.sleep(0.01)
+        if fd:
+            timeout_sec = 0
+            (data_ready, _, _) = select.select(
+                [fd], [], [], timeout_sec)
+            if data_ready:
+                try: # check if the client has exited the remote console.
+                    os.kill(child_pid, 0)
+                    output = os.read(
+                        fd, max_read_bytes).decode(errors='ignore')
+                    socketio.emit(
+                        'console-output', {'output': output}, to=client_id)
+                except OSError:
+                    # ends the client's connection upon exit from the remote console.
+                    socketio.emit('end', to=client_id)
+                    return
+
+
+@socketio.on('console-input')
+def console_input(data):
+    """Take input from the remote console and write it to the child pty."""
+    client = clients[request.sid]
+    fd = client.get('fd')
+    if fd:
+        print(data['input'])
+        os.write(fd, data['input'].encode())
+        read_and_forward_console_output(fd, request.sid, client['child_pid'])
+
+
+@socketio.on('resize')
+def resize(data):
+    fd = clients[request.sid].get('fd')
+    if fd:
+        set_winsize(fd, data['rows'], data['cols'])
+
+
+@socketio.on("connect")
+def connect():
+    """New client connected.
+    Create a child process running the hbnb console program which the client
+    would read from and write to.
+    """
+    (child_pid, fd) = pty.fork()
+    if child_pid == 0:
+        subprocess.run('/home/chigozirim/Documents/ALX_School/Mini_AirBnB/console.py')
+    else:
+        # This is the parent process fork.
+        # store child fd and pid
+        clients[request.sid] = {'fd': fd, 'child_pid': child_pid}
+        set_winsize(fd, 50, 50)
+
+
+@socketio.on("disconnect")
+def disconnect():
+    """Remove client from dict of connected clients, kill the child pid
+    if it's still running.
+    """
+    client = clients[request.sid]
+
+    try:
+        os.kill(client['child_pid'], 0)
+    except OSError:
+        # Do nothing if the child pid doesn't exist
+        pass
+    else:
+        os.kill(client['child_pid'], SIGKILL)
+    del clients[request.sid]
+
+if __name__ == '__main__':
+    """Main function."""
+    socketio.run(app, debug=True, port=5005, host='0.0.0.0')

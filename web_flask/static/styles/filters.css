@@ -120,3 +120,32 @@ button {
 button:hover {
 	opacity: 90%;
 }
+
+
+/* Vertical layout for small screens */
+@media only screen and (max-width: 720px) {
+	.filters {
+	  display: grid;
+	  height: 210px;
+	}
+  
+	.filters .locations,
+	.filters .amenities {
+	  height: 70px;
+	  width: 100%;
+	  border-bottom: 1px solid #ddd;
+	}
+  
+	.filters .locations:hover .popover,
+	.filters .amenities:hover .popover {
+	  margin-left: auto;
+	  position: relative;
+	  width: 50%;
+	  z-index: 1;
+	}
+  
+	.filters .amenities:hover {
+	  border-top: 1px solid #ddd;
+	}
+}
+
