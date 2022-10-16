@@ -20,16 +20,12 @@ from fabric.api import *
 from os.path import isdir
 from os.path import exists
 from fabric.contrib import files
-from invoke.exceptions import UnexpectedExit
 
 
+env.user = 'ubuntu'
 env.roledefs = {
-    "web_server": ["ubuntu@ec2-18-206-203-208.compute-1.amazonaws.com"],
-    "web_servers": [
-        "ubuntu@ec2-52-90-233-183.compute-1.amazonaws.com",
-        "ubuntu@ec2-44-204-36-60.compute-1.amazonaws.com",
-    ],
-    "load_balancer": ["ubuntu@ec2-52-90-233-183.compute-1.amazonaws.com"],
+    "load_balancer": ["52.90.233.183"],
+    "web_servers": ["52.90.233.183", "44.204.36.60"]
 }
 
 domain_name = "miniairbnb.gq"
@@ -121,10 +117,8 @@ def deploy_loadbalancer():
 
     haproxy_config = haproxy_config.format(
         domain=domain_name,
-        # ip_addr_1=env.roledefs['web_servers'][0]
-        # ip_addr_2=env.roledefs['web_servers'][1]
-        ip_addr_1="52.90.233.183",
-        ip_addr_2="44.204.36.60",
+        ip_addr_1=env.roledefs['web_servers'][0],
+        ip_addr_2=env.roledefs['web_servers'][1]
     )
 
     sudo(f'printf %s "{haproxy_config}" > /etc/haproxy/haproxy.cfg')
@@ -230,8 +224,20 @@ def setup_webserver():
         location /api {
             proxy_pass http://127.0.0.1:5001/api;
         }
+        
+        location /socket.io {
+            include proxy_params;
+            proxy_http_version 1.1;
+            proxy_redirect off;
+            proxy_buffering off;
 
-        # Serve static content for Mini_AirBnB
+            #proxy_set_header Host $host;
+            #proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            proxy_pass http://127.0.0.1:5005/socket.io;
+        }
+
+        # Serve static content for HolbertonBnB
         location /static {
             proxy_pass http://127.0.0.1:5000;
         }
@@ -250,7 +256,9 @@ def setup_webserver():
     run("sudo ufw allow 'Nginx Full'")
     run("sudo service nginx restart")
 
+    put("console.py", "/data/", use_sudo=True)
     put("requirements.txt", "/data/", use_sudo=True)
+
     sudo("apt-get install mysql-server")
     sudo("apt-get install default-libmysqlclient-dev")
     sudo("apt-get install python3-pip")
@@ -266,9 +274,16 @@ def start_apps():
     except:
         pass
 
-    # Run the gunicorn instances in the background
+    # Run gunicorn instances in the background
+    sudo(f"export HBNB_MYSQL_USER=hbnb_dev\
+        HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost\
+        HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db"
+    )
     sudo(f"gunicorn --chdir /data/ --bind 0.0.0.0:5000 web_flask.hbnb:app -- daemon &")
     sudo(f"gunicorn --chdir /data/ --bind 0.0.0.0:5001 api.v1.app:app --daemon &")
+    #sudo(f"gunicorn --chdir /data/ --bind 0.0.0.0:5005 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 web_terminal:app")
+    sudo(f"nohup python3 /data/web_flask/web_terminal.py &")
+
     print("Application servers activated!")
 
 
