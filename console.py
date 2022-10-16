@@ -2,7 +2,9 @@
 """ Module for the console """
 
 import cmd
+import sys
 import models
+import signal
 from os import getenv
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -59,21 +61,23 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def default(self, arg):
-        """Default behavior for cmd module when input is invalid."""
+        """Default behavior for cmd module."""
         cmds = {
             "all": self.do_all,
             "count": self.do_count,
+            "create": self.do_create,
             "show": self.do_show,
             "destroy": self.do_destroy,
             "update": self.do_update,
         }
         if "." in arg and "(" in arg and ")" in arg:
-            cls = arg[: arg.index(".")]
-            method = arg[arg.index(".") + 1 : arg.index("(")]
-            argument = arg[arg.index("(") + 1 : arg.index(")")]
-            argument = "{} {}".format(cls, argument.replace(",", ""))
+            cls = arg[:arg.index(".")]
+            method = arg[arg.index(".") + 1:arg.index("(")]
+            arguments = arg[arg.index("(") + 1:arg.index(")")]
+            arguments = arguments.replace("=", " ")
+            arguments = "{} {}".format(cls, arguments.replace(",", ""))
             if method in cmds.keys():
-                return cmds[method](argument)
+                return cmds[method](arguments)
         self.stdout.write("*** Unknown syntax: %s\n" % arg)
         return
 
@@ -169,8 +173,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_all(self, arg):
-        """Prints string representation of all instances based on, or not on,
-        a class.
+        """Displays string representation of all instances of a given class.
+        If no class is specified, displays all instantiated objects.
 
         Usage: all or all <class> or <class>.all()
         Ex: (hbnb) all
@@ -193,7 +197,7 @@ class HBNBCommand(cmd.Cmd):
         print("]")
 
     def do_count(self, arg):
-        """Prints the number of instances of a class.
+        """Retrieves the number of instances of a class.
         Usage: count <class> or <class>.count()
         Ex: (hbnb) count City
             (hbnb) City.count()
@@ -261,7 +265,7 @@ class HBNBCommand(cmd.Cmd):
 
     def help_BaseModel(self):
         """Help for the BaseModel class."""
-        message = """A class from which other classes inherit from.
+        message = """A class which other classes inherit from.
             Usage: <command> BaseModel or BaseModel.<command>()
         """
         print(message)
@@ -436,6 +440,14 @@ class HBNBCommand(cmd.Cmd):
 
         return completions
 
+
+def signal_handler(sig, frame):
+    """Handle SIGNINT"""
+    print("exiting...")
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
