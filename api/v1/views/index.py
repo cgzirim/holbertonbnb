@@ -9,15 +9,18 @@ from models.user import User
 from models import storage
 from api.v1.views import app_views
 from flask import jsonify
+from flasgger import swag_from
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
+@swag_from("documentation/status/status.yml")
 def status():
     """ Status of API """
     return jsonify({"status": "OK"})
 
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
+@swag_from("documentation/stats/stats.yml")
 def number_objects():
     """ Retrieves the number of each objects by type """
     classes = [Amenity, City, Place, Review, State, User]
