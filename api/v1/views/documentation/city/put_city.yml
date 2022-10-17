@@ -8,8 +8,10 @@
         type: string
         required: true
         description: id of the city
-      - name: update_request
-        in: body
+      - name: name
+        in: query
+        description: The name of the new city
+        type: string
         required: true
 
     responses:

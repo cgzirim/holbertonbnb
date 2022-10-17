@@ -17,4 +17,6 @@
       404:
         description: place not found / amenity not found / amenity not found in place
       200:
-        description: request executed successfully
+        description: An empty object representing the deleted amenity."
+        schema:
+          type: object

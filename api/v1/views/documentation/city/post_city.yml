@@ -1,4 +1,4 @@
-    Post a new city
+    Creates a new city.
     ---
     tags:
       - Cities
@@ -7,15 +7,13 @@
         in: path
         type: string
         required: true
-        description: the unique id of the city state
-      - name: body_request
-        in: body
+        description: The unique id of the city state
+      - name: name
+        in: query
         required: true
-        requires:
-          - name
-        properties:
-          name:
-            type: string
+        description: The name of the new city.
+        schema:
+          type: string
 
     responses:
       404:

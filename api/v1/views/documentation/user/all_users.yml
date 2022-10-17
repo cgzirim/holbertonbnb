@@ -1,11 +1,11 @@
-retrieves a list of all users.
+Retrieves a list of all users.
 ---
 tags:
   - Users
 
 responses:
   200:
-    description: request executed successfully
+    description: A list of all users.
     schema:
       type: array
       items:

@@ -1,4 +1,4 @@
-get a specific city  based on the state_id
+Get a specific city based on the state_id
 ---
 tags:
   - Cities
@@ -7,7 +7,7 @@ parameters:
     in: path
     type: string
     required: true
-    description: The uniqe id of the city
+    description: The uniqe id of the city to retrieve.
 responses:
   200:
     description: Successful request

@@ -1,19 +1,17 @@
-    Links an amenity object to a place
+    Creates a new amenity for a place.
     ---
     tags:
       - Amenities
     parameters:
-      - name: amenity_id
-        in: body
+      - name: name
+        in: query
+        description: The name of the new amenity
         required: true
-        requires:
-          - name
-        properties:
-          name:
-            type: string
+        schema:
+          type: string
 
     responses:
       400:
-        description: Not a JSON
+        description: "'Not a JSON' or 'Missing name'"
       201:
-        description: request executed successfully
+        description: The new amenity.

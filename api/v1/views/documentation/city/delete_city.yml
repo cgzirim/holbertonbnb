@@ -1,4 +1,4 @@
-    deletes a city based on id
+    Deletes a city based on ID
     ---
     tags:
       - Cities

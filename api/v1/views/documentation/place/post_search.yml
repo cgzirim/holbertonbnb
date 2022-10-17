@@ -1,4 +1,4 @@
-    Search Places with a POST request.
+    Retrieves places based on given parameters.
     ---
     tags:
       - Places

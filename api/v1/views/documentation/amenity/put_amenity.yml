@@ -1,4 +1,4 @@
-    Updates an amenity
+    Updates a given amenity.
     ---
     tags:
       - Amenities
@@ -7,10 +7,12 @@
         in: path
         type: string
         required: true
-        description: The id of the amenity
-      - name: update_request
-        in: body
+        description: The id of the amenity to update
+      - name: name
+        in: query
         required: true
+        description: The new name of the amenity.
+        type: string
     responses:
       404:
         description: resource not found!

@@ -1,4 +1,4 @@
-gets amenity by ID
+Retrieves an amenity by ID
 ---
 tags:
   - Amenities
