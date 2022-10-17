@@ -20,6 +20,39 @@ header {
 	background-color: #cccccc;
 	position: absolute;
 	right: 30px;
+
+	position: absolute;
+	text-align: center;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+#api_status p {
+	color: white;
+	font-weight: 600;
+	margin: 10px;
+	margin-left: 6px;
+	margin-top: 12px;
+}
+
+#api_status a:link {
+	text-decoration: none;
+}
+
+#api_status a:visited {
+	text-decoration: none;
+}
+
+#api_status a:hover {
+	text-decoration: none;
+}
+
+#api_status a:active {
+	text-decoration: none;
+}
+
+#api_status:hover {
+	opacity: 85%;
 }
 
 #terminal_btn {
