@@ -87,7 +87,7 @@ def connect():
     Create a child process running the hbnb console program which the client
     would read from and write to.
     """
-    path_to_console = environ.get("HBNB_CONSOLE_PATH") or "/data/web_flask/console.py"
+    path_to_console = environ.get("HBNB_CONSOLE_PATH") or "/data/console.py"
     (child_pid, fd) = pty.fork()
     if child_pid == 0:
         subprocess.run(path_to_console)
