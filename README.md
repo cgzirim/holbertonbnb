@@ -22,12 +22,12 @@ Working with unfamiliar, developed codebases and pair programming were both much
 
 Just the above—a streamlined, organized version of Holbertonbnb—is contained in this repository. If you must, call it a minified build.
 
-I started this repository as a duplicate of AirBnB_clone_v4, the final version worked on within the scope of Holberton's curriculum. Since then, I have:
+I started this repository as a duplicate of [AirBnB_clone_v4](https://github.com/iChigozirim/AirBnB_clone_v4), the final version worked on within the scope of Holberton's curriculum. Since then, I have:
 
 - Organized only the code required to deploy the program, cutting out all unnecessary code.
 - improved the front-end and created new Fabric for auto-deployment.
 - Wrote thorough, organized documentation for all parts of repo.
-- Added a new feature - the web_terminal.
+- Implemented a new feature - the web_terminal.
 
 ### What this repository does include:
 
