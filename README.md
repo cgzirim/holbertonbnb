@@ -53,7 +53,7 @@ I started this repository as a duplicate of [AirBnB_clone_v4](https://github.com
   - Swagger documentation - [miniairbnb.gq/apidocs](https://miniairbnb.gq/apidocs)
 
 - Automatic deployment script.
-  - [fabfile.py](./fabfile.py)
+  - [Source code](./fabfile.py)
   - [Documentation](./documentation/DEPLOYMENT.md)
 
 - Test suit
