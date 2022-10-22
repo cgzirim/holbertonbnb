@@ -14,7 +14,7 @@ Fabric script to automate remote deployment of HolbertonBnB.
 
 [fabfile.py](): Fabric fabfile to deploy HolbertonBnB to given web servers.
 - Run `fab --list` to see available commands.
-- Usage: `fab <script> --<option>=<value>`
+- Usage: `fab <script>:<argument> --<option>=<value>`
 - Options:
   - `deploy_loadbalancer`: Configures an Ubuntu machine to distribute traffic to specified web servers.
   - `pack --folder=STR`: Creates a tar archive.
