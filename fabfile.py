@@ -24,8 +24,8 @@ from fabric.contrib import files
 
 env.user = 'ubuntu'
 env.roledefs = {
-    "load_balancer": ["52.90.233.183"],
-    "web_servers": ["52.90.233.183", "44.204.36.60"]
+    "load_balancer": ["44.204.189.160"],
+    "web_servers": ["44.204.189.160", "44.204.36.60"]
 }
 
 domain_name = "miniairbnb.gq"
@@ -200,8 +200,9 @@ def pack_and_upload(folder):
 
 
 def setup_webserver():
-    """Configures Nginx and installs the necessary dependencies on an Ubuntu
-    machine to serve Holbertonbnb.
+    """Configures Nginx and installs dependencies in /data/requirements.txt
+    file and few other necessary dependencies on an Ubuntu machine to serve
+    Holbertonbnb.
     """
     run("sudo apt-get update")
     run("sudo apt-get install nginx")
@@ -256,8 +257,8 @@ def setup_webserver():
     run("sudo ufw allow 'Nginx Full'")
     run("sudo service nginx restart")
 
-    put("console.py", "/data/", use_sudo=True)
-    put("requirements.txt", "/data/", use_sudo=True)
+    # put("console.py", "/data/", use_sudo=True)
+    # put("requirements.txt", "/data/", use_sudo=True)
 
     sudo("apt-get install mysql-server")
     sudo("apt-get install default-libmysqlclient-dev")
@@ -265,7 +266,7 @@ def setup_webserver():
     sudo("pip3 install -r /data/requirements.txt")
 
 
-def start_apps():
+def start_apps(storage_mode="db"):
     """Starts Holbertonbnb WSGI apps."""
     print("Starting Gunicorn instances... ")
     try:
@@ -275,14 +276,16 @@ def start_apps():
         pass
 
     # Run gunicorn instances in the background
-    sudo(f"export HBNB_MYSQL_USER=hbnb_dev\
-        HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost\
-        HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db"
-    )
+    if storage_mode == "db":
+        sudo(f"export HBNB_MYSQL_USER=hbnb_dev\
+            HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost\
+            HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db"
+            )
     sudo(f"gunicorn --chdir /data/ --bind 0.0.0.0:5000 web_flask.hbnb:app -- daemon &")
     sudo(f"gunicorn --chdir /data/ --bind 0.0.0.0:5001 api.v1.app:app --daemon &")
     #sudo(f"gunicorn --chdir /data/ --bind 0.0.0.0:5005 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 web_terminal:app")
-    sudo(f"nohup python3 /data/web_flask/web_terminal.py &")
+    # gunicorn --bind 0.0.0.0:5005 --worker-class eventlet -w 1 web_terminal:app
+    # sudo(f"nohup python3 /data/web_flask/web_terminal.py &")
 
     print("Application servers activated!")
 
@@ -295,9 +298,6 @@ def deploy_webservers(folder="all"):
     Args:
         folder (str): The name of the folder to pack and upload.
     """
-    print("Setting up web server... ")
-    setup_webserver()
-    print("Web server setup completed!")
 
     if folder == "all":
         for f in ["models", "api", "web_flask"]:
@@ -305,5 +305,13 @@ def deploy_webservers(folder="all"):
             pack_and_upload(f)
     else:
         pack_and_upload(folder)
+
+    # Upload requirements.txt and console.py files
+    put("console.py", "/data/", use_sudo=True)
+    put("requirements.txt", "/data/", use_sudo=True)
+
+    print("Setting up web server... ")
+    setup_webserver()
+    print("Web server setup completed!")
 
     start_apps()
