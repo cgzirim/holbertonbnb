@@ -23,9 +23,10 @@ term.onData((data) => {
   socket.emit("console-input", { input: data });
 });
 
+// const socket = io.connect("wss://www.miniairbnb.gq/socket.io");
 // const socket = io.connect("wss://miniairbnb.gq/socket.io", {transports: ["websocket"]});
 // {transports: ["websocket"], rejectUnauthorized: false }
-const socket = io.connect("wss://miniairbnb.gq:5005", { rejectUnauthorized: false });
+const socket = io.connect("wss://www.miniairbnb.gq:5005", {transports: ["websocket"]});
 const status = document.getElementById("status");
 
 socket.on("console-output", function (data) {
@@ -44,7 +45,8 @@ socket.on("end", () => {
   socket.disconnect()
 })
 
-socket.on("disconnect", () => {
+socket.on("disconnect", (reason) => {
+  console.log("DISCONNECTING CLIENT SIDE: " + reason)
   status.innerHTML =
     '<span style="background-color: #ff8383;">disconnected</span>';
 });
