@@ -22,7 +22,7 @@ Amenity  BaseModel  City  Place  Review  State  User
 $
 ```
 
-Alternatively, to use the HolbertonBnB console in interactive mode, run the file `console.py` by itself:
+Alternatively, to use the HolbertonBnB console in interactive mode, use the [web terminal](https://www.miniairbnb.gq/#console) or run the file `console.py` by itself:
 ```
 $ ./console.py
 ```
