@@ -44,4 +44,4 @@ python3 -m web_terminal
 
 ## Author :black_nib:
 
-* __Brennan D Baraban__ - <[bdbaraban](https://github.com/bdbaraban)>
+**Chigozirim Igweamaka** - <[iChigozirim](https://github.com/iChigozirim)>
