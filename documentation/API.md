@@ -27,7 +27,7 @@ Of course, the API is truly only functional in conjunction with [models](./MODEL
 
 I would document all of the HolbertonBnB API endpoints here... but I already have! With [Swagger](https://swagger.io/)!
 
-[Check out the entire, deployed documentation of the HolbertonBnB API here.](https://miniairbnb.gq/apidocs)
+[Check out the entire, deployed documentation of the HolbertonBnB API here.](https://www.miniairbnb.gq/apidocs/)
 
 ## Author :black_nib:
 
