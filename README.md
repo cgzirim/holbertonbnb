@@ -4,7 +4,7 @@
 
 ## About
 
-[Holbertonbnb](https://www.miniairbnb.gq) is a full-stack web application that replicates the search and filter features of Airbnb. It incorporates a dynamic HTML5/CSS3/jQuery front-end with a MySQL database and Flask RESTful API.
+[Holbertonbnb](https://www.miniairbnb.gq) is a full-stack web application that replicates the search and filter features of Airbnb. It incorporates a dynamic HTML5/CSS3/jQuery front-end with a MySQL database and Flask RESTful API.  
 It runs on three Amazon EC2 instances (1 load balancer, 2 applications servers with a replication/master database setup) It utilizes NGINX as a web server, 
 HAProxy for loadbalancing, and gunicorn as the application server.
 
