@@ -5,6 +5,11 @@
 ## About
 
 [Holbertonbnb](https://www.miniairbnb.gq) is a full-stack web application that replicates the search and filter features of Airbnb. It incorporates a dynamic HTML5/CSS3/jQuery front-end with a MySQL database and Flask RESTful API.
+It runs on three Amazon EC2 instances (1 load balancer, 2 applications servers with a replication/master database setup) It utilizes NGINX as a web server, 
+HAProxy for loadbalancing, and gunicorn as the application server.
+
+![Screenshot from 2022-12-16 06-22-00](https://user-images.githubusercontent.com/88312276/208028429-bff90aba-67cf-4822-96d4-f35b25aaabea.png)
+
 
 As a first-year project at ALX, Holbertonbnb was developed over the course of two months and four versions, which are listed below:
 1. [AirBnB clone](https://github.com/iChigozirim/AirBnB_clone)
